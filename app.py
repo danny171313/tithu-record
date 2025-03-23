@@ -5,10 +5,16 @@ import os
 st.set_page_config(page_title="티츄 점수 계산기", layout="wide")
 st.title("🎴 티츄 점수 계산기 (웹버전)")
 
-# CSV 파일 경로
 RECORD_FILE = "player_stats.csv"
 
-# 초기 세션 상태 설정
+# 🥇 기록 불러오기 함수 (가장 먼저 정의)
+def load_saved_names():
+    if not os.path.exists(RECORD_FILE):
+        return []
+    df = pd.read_csv(RECORD_FILE)
+    return sorted(df["이름"].unique())
+
+# 🔄 세션 초기화
 def init_state():
     if "round" not in st.session_state:
         st.session_state.round = 1
@@ -20,14 +26,7 @@ def init_state():
 
 init_state()
 
-# 기록 불러오기
-def load_saved_names():
-    if not os.path.exists(RECORD_FILE):
-        return []
-    df = pd.read_csv(RECORD_FILE)
-    return sorted(df["이름"].unique())
-
-# 점수 계산
+# 🎯 점수 계산
 def calculate():
     a_score = st.session_state.get("a_score")
     b_score = st.session_state.get("b_score")
@@ -69,7 +68,7 @@ def calculate():
     st.session_state.history.append(scores)
     st.session_state.round += 1
 
-# 기록 저장
+# 💾 기록 저장
 def save_records(winner_team, names):
     record = {}
     if os.path.exists(RECORD_FILE):
@@ -91,7 +90,7 @@ def save_records(winner_team, names):
     df.to_csv(RECORD_FILE, index=False)
     st.success("기록이 저장되었습니다!")
 
-# 기록 보기 화면
+# 📖 기록 보기 페이지
 def record_page():
     st.header("📖 플레이어 기록")
     if not os.path.exists(RECORD_FILE):
@@ -103,9 +102,10 @@ def record_page():
     if st.button("← 돌아가기"):
         st.session_state.page = "main"
 
-# 메인 페이지
+# 🧾 메인 페이지
 if st.session_state.page == "main":
     colA, colB = st.columns(2)
+
     with colA:
         st.subheader("🟥 A팀")
         a1 = st.selectbox("A팀 플레이어 1", options=st.session_state.names + [""], key="a1")
@@ -123,6 +123,7 @@ if st.session_state.page == "main":
         st.text_input("점수", key="b_score")
 
     st.radio("더블 승리 팀", ["없음", "A", "B"], index=0, key="double", horizontal=True)
+
     if st.button("점수 계산"):
         calculate()
         if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
