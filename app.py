@@ -23,27 +23,15 @@ def init_state():
         st.session_state.history = []
         st.session_state.names = load_saved_names()
         st.session_state.page = "main"
-        st.session_state.a_tichu_state = "없음"
-        st.session_state.b_tichu_state = "없음"
 
 init_state()
-
-# 티츄 순환
-def cycle_tichu(team_key):
-    current = st.session_state[team_key]
-    next_state = {
-        "없음": "티츄",
-        "티츄": "라지 티츄",
-        "라지 티츄": "없음"
-    }[current]
-    st.session_state[team_key] = next_state
 
 # 점수 계산
 def calculate():
     a_score = st.session_state.get("a_score")
     b_score = st.session_state.get("b_score")
-    a_tichu = st.session_state.get("a_tichu_state")
-    b_tichu = st.session_state.get("b_tichu_state")
+    a_tichu = st.session_state.get("a_tichu")
+    b_tichu = st.session_state.get("b_tichu")
     a_success = st.session_state.get("a_success")
     b_success = st.session_state.get("b_success")
     double_winner = st.session_state.get("double")
@@ -114,14 +102,6 @@ def record_page():
     if st.button("← 돌아가기"):
         st.session_state.page = "main"
 
-# 버튼 색상
-def get_color(state):
-    return {
-        "없음": "lightgray",
-        "티츄": "gold",
-        "라지 티츄": "tomato"
-    }[state]
-
 # 메인 화면
 if st.session_state.page == "main":
     colA, colB = st.columns(2)
@@ -130,9 +110,7 @@ if st.session_state.page == "main":
         st.subheader("🟥 A팀")
         a1 = st.selectbox("A팀 플레이어 1", options=st.session_state.names + [""], key="a1")
         a2 = st.selectbox("A팀 플레이어 2", options=st.session_state.names + [""], key="a2")
-        if st.button(f"A팀 티츄: {st.session_state.a_tichu_state}", key="a_tichu_btn"):
-            cycle_tichu("a_tichu_state")
-        st.markdown(f"<div style='background-color:{get_color(st.session_state.a_tichu_state)}; height:10px;'></div>", unsafe_allow_html=True)
+        st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="a_tichu")
         st.checkbox("성공 여부", key="a_success", value=True)
         st.text_input("점수", key="a_score")
 
@@ -140,9 +118,7 @@ if st.session_state.page == "main":
         st.subheader("🟦 B팀")
         b1 = st.selectbox("B팀 플레이어 1", options=st.session_state.names + [""], key="b1")
         b2 = st.selectbox("B팀 플레이어 2", options=st.session_state.names + [""], key="b2")
-        if st.button(f"B팀 티츄: {st.session_state.b_tichu_state}", key="b_tichu_btn"):
-            cycle_tichu("b_tichu_state")
-        st.markdown(f"<div style='background-color:{get_color(st.session_state.b_tichu_state)}; height:10px;'></div>", unsafe_allow_html=True)
+        st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="b_tichu")
         st.checkbox("성공 여부", key="b_success", value=True)
         st.text_input("점수", key="b_score")
 
