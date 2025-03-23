@@ -129,8 +129,6 @@ if st.session_state.page == "setup":
 
 # 메인 점수 계산 페이지
 elif st.session_state.page == "main":
-    )
-
     colA, colB = st.columns([0.5, 0.5])
     with colA:
         st.subheader(f"🟥 A팀 {st.session_state.total['A']}점")
