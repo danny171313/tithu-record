@@ -175,7 +175,34 @@ elif st.session_state.page == "main":
                 ])
                 st.success("처음 화면으로 돌아갑니다.")
                 st.session_state.page = "setup"
-                st.rerun()
+                st.success("기록이 저장되었습니다. 아래 버튼을 눌러 처음으로 돌아가세요.")
+                save_records(winner, [
+                    (st.session_state.a1, "A팀"),
+                    (st.session_state.a2, "A팀"),
+                    (st.session_state.b1, "B팀"),
+                    (st.session_state.b2, "B팀"),
+                ])
+                st.success("처음 화면으로 돌아갑니다.")
+                st.session_state.page = "setup"
+                if st.button("처음으로 돌아가기"):
+                save_records(winner, [
+                    (st.session_state.a1, "A팀"),
+                    (st.session_state.a2, "A팀"),
+                    (st.session_state.b1, "B팀"),
+                    (st.session_state.b2, "B팀"),
+                ])
+                st.success("처음 화면으로 돌아갑니다.")
+                st.session_state.page = "setup"
+                    st.session_state.page = "setup"
+                save_records(winner, [
+                    (st.session_state.a1, "A팀"),
+                    (st.session_state.a2, "A팀"),
+                    (st.session_state.b1, "B팀"),
+                    (st.session_state.b2, "B팀"),
+                ])
+                st.success("처음 화면으로 돌아갑니다.")
+                st.session_state.page = "setup"
+                    st.rerun()
 
             elif st.button("처음으로 돌아가기"):
                 st.session_state.page = "setup"
