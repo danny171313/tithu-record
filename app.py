@@ -119,6 +119,13 @@ def record_page():
         st.session_state.page = "main"
         st.rerun()
 
+    if st.button("🏠 처음 화면으로"):
+        st.session_state.page = "setup"
+        st.rerun()
+
+        st.session_state.page = "main"
+        st.rerun()
+
 # 이름 입력 페이지
 if st.session_state.page == "setup":
     st.header("👥 플레이어 이름 설정")
@@ -167,7 +174,7 @@ elif st.session_state.page == "main":
 
             save_choice = st.radio("기록을 저장하시겠습니까?", ["예", "아니오"], key="save_option")
 
-            if save_choice == "예":
+            if save_choice == "예" and st.button("기록 저장"):
                 save_records(winner, [
                     (st.session_state.a1, "A팀"),
                     (st.session_state.a2, "A팀"),
