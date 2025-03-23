@@ -92,7 +92,6 @@ def save_records(winner_team, names):
     st.success("기록이 저장되었습니다!")
 
 # 기록 보기
-
 def record_page():
     st.header("📖 플레이어 기록")
     if not os.path.exists(RECORD_FILE):
@@ -160,15 +159,24 @@ elif st.session_state.page == "main":
     st.radio("더블 승리 팀", ["없음", "A", "B"], index=0, key="double", horizontal=True)
 
     if st.button("점수 계산"):
-    calculate()
-    if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
-        winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
-        st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
-        s
-    else:
-        st.rerun()
+        calculate()
 
-            elif st.button("처음으로 돌아가기"):
+        if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
+            winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
+            st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
+
+            save_choice = st.radio("기록을 저장하시겠습니까?", ["예", "아니오"], key="save_option")
+
+            if save_choice == "예":
+                save_records(winner, [
+                    (st.session_state.a1, "A팀"),
+                    (st.session_state.a2, "A팀"),
+                    (st.session_state.b1, "B팀"),
+                    (st.session_state.b2, "B팀"),
+                ])
+                st.success("기록이 저장되었습니다. 아래 버튼을 눌러 처음으로 돌아가세요.")
+
+            if st.button("처음으로 돌아가기"):
                 st.session_state.page = "setup"
                 st.rerun()
         else:
