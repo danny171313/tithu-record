@@ -154,10 +154,7 @@ elif st.session_state.page == "main":
                 (st.session_state.b1, "B팀"),
                 (st.session_state.b2, "B팀"),
             ])
-        st.rerun() or st.session_state.total["B"] >= 1000:
-            winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
-            st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
-            save_records(winner, [(st.session_state.a1, "A팀"), (st.session_state.a2, "A팀"), (st.session_state.b1, "B팀"), (st.session_state.b2, "B팀")])
+        st.rerun()
 
     if st.button("되돌리기"):
         if st.session_state.history:
