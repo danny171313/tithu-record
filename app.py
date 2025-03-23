@@ -92,118 +92,30 @@ def save_records(winner_team, names):
     st.success("기록이 저장되었습니다!")
 
 # 기록 보기
+
 def record_page():
     st.header("📖 플레이어 기록")
     if not os.path.exists(RECORD_FILE):
         st.info("아직 저장된 기록이 없습니다.")
         return
+
     df = pd.read_csv(RECORD_FILE)
     df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
     st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
 
-    # 기록 삭제 기능
     name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
     if st.button("선택한 플레이어 기록 삭제"):
         df = df[df["이름"] != name_to_delete]
         df.to_csv(RECORD_FILE, index=False)
         st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
         st.rerun()
+
     if st.button("전체 기록 초기화"):
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
-
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
         if os.path.exists(RECORD_FILE):
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
-
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
             os.remove(RECORD_FILE)
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
-
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
             st.success("모든 기록이 초기화되었습니다.")
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
-
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
             st.rerun()
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
 
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
-    
-    st.header("📖 플레이어 기록")
-    if not os.path.exists(RECORD_FILE):
-        st.info("아직 저장된 기록이 없습니다.")
-        return
-    df = pd.read_csv(RECORD_FILE)
-    df["승률"] = df.apply(lambda row: f"{(row['승']/(row['승']+row['패'])*100):.1f}%" if row['승']+row['패'] > 0 else "0.0%", axis=1)
-    st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
-
-    # 기록 삭제 기능
-    name_to_delete = st.selectbox("삭제할 플레이어 선택", options=df["이름"].tolist(), key="delete_name")
-    if st.button("선택한 플레이어 기록 삭제"):
-        df = df[df["이름"] != name_to_delete]
-        df.to_csv(RECORD_FILE, index=False)
-        st.success(f"'{name_to_delete}'의 기록이 삭제되었습니다.")
-        st.rerun()
     if st.button("← 돌아가기"):
         st.session_state.page = "main"
         st.rerun()
@@ -236,48 +148,40 @@ elif st.session_state.page == "main":
     colA, colB = st.columns([0.5, 0.5])
     with colA:
         st.subheader(f"🟥 A팀 {st.session_state.total['A']}점")
-        a_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="a_tichu")
+        st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="a_tichu")
         st.checkbox("성공 여부", key="a_success", value=False)
         st.text_input("점수", key="a_score")
     with colB:
         st.subheader(f"🟦 B팀 {st.session_state.total['B']}점")
-        b_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="b_tichu")
+        st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="b_tichu")
         st.checkbox("성공 여부", key="b_success", value=False)
         st.text_input("점수", key="b_score")
 
     st.radio("더블 승리 팀", ["없음", "A", "B"], index=0, key="double", horizontal=True)
 
     if st.button("점수 계산"):
-    calculate()
-    if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
-        winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
-        st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
-        save_choice = st.radio("기록을 저장하시겠습니까?", ["예", "아니오"], key="save_option")
+        calculate()
+        if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
+            winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
+            st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
+            save_choice = st.radio("기록을 저장하시겠습니까?", ["예", "아니오"], key="save_option")
 
-        if save_choice == "예":
-            save_records(winner, [
-                (st.session_state.a1, "A팀"),
-                (st.session_state.a2, "A팀"),
-                (st.session_state.b1, "B팀"),
-                (st.session_state.b2, "B팀"),
-            ])
-            st.success("처음 화면으로 돌아갑니다.")
-            st.session_state.page = "setup"
-            st.rerun()
+            if save_choice == "예":
+                save_records(winner, [
+                    (st.session_state.a1, "A팀"),
+                    (st.session_state.a2, "A팀"),
+                    (st.session_state.b1, "B팀"),
+                    (st.session_state.b2, "B팀"),
+                ])
+                st.success("처음 화면으로 돌아갑니다.")
+                st.session_state.page = "setup"
+                st.rerun()
 
-        elif st.button("처음으로 돌아가기"):
-            st.session_state.page = "setup"
+            elif st.button("처음으로 돌아가기"):
+                st.session_state.page = "setup"
+                st.rerun()
+        else:
             st.rerun()
-    else:
-        st.rerun()
-                elif st.button("처음으로 돌아가기"):
-                    st.session_state.page = "setup"
-                    st.rerun(),
-                (st.session_state.a2, "A팀"),
-                (st.session_state.b1, "B팀"),
-                (st.session_state.b2, "B팀"),
-            ])
-        st.rerun()
 
     if st.button("되돌리기"):
         if st.session_state.history:
