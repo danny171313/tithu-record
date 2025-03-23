@@ -187,3 +187,8 @@ elif st.session_state.page == "main":
                 st.session_state.page = "setup"
                 st.rerun()
         else:
+            st.rerun()
+
+    if st.button("되돌리기"):
+        if st.session_state.history:
+            last = st.session_state.history.pop()
