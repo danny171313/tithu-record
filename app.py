@@ -7,26 +7,27 @@ st.title("🎴 티츄 점수 계산기 (웹버전)")
 
 RECORD_FILE = "player_stats.csv"
 
-# 🥇 기록 불러오기 함수 (가장 먼저 정의)
+# 기록 불러오기 함수
 def load_saved_names():
     if not os.path.exists(RECORD_FILE):
         return []
     df = pd.read_csv(RECORD_FILE)
     return sorted(df["이름"].unique())
 
-# 🔄 세션 초기화
+# 세션 초기화
 def init_state():
+    if "page" not in st.session_state:
+        st.session_state.page = "setup"
     if "round" not in st.session_state:
         st.session_state.round = 1
         st.session_state.scores = []
         st.session_state.total = {"A": 0, "B": 0}
         st.session_state.history = []
         st.session_state.names = load_saved_names()
-        st.session_state.page = "main"
 
 init_state()
 
-# 🎯 점수 계산
+# 점수 계산
 def calculate():
     a_score = st.session_state.get("a_score")
     b_score = st.session_state.get("b_score")
@@ -68,7 +69,7 @@ def calculate():
     st.session_state.history.append(scores)
     st.session_state.round += 1
 
-# 💾 기록 저장
+# 기록 저장
 def save_records(winner_team, names):
     record = {}
     if os.path.exists(RECORD_FILE):
@@ -90,7 +91,7 @@ def save_records(winner_team, names):
     df.to_csv(RECORD_FILE, index=False)
     st.success("기록이 저장되었습니다!")
 
-# 📖 기록 보기 페이지
+# 기록 보기
 def record_page():
     st.header("📖 플레이어 기록")
     if not os.path.exists(RECORD_FILE):
@@ -101,25 +102,46 @@ def record_page():
     st.dataframe(df.sort_values(by="승", ascending=False), use_container_width=True)
     if st.button("← 돌아가기"):
         st.session_state.page = "main"
+        st.rerun()
 
-# 🧾 메인 페이지
-if st.session_state.page == "main":
-    colA, colB = st.columns(2)
+# 이름 입력 페이지
+if st.session_state.page == "setup":
+    st.header("👥 플레이어 이름 설정")
+    name_options = st.session_state.names + ["직접 입력"]
 
+    a1_select = st.selectbox("A팀 플레이어 1", options=name_options, key="a1_select")
+    a1 = st.text_input("직접 입력 - A팀 1", key="a1_manual") if a1_select == "직접 입력" else a1_select
+    a2_select = st.selectbox("A팀 플레이어 2", options=name_options, key="a2_select")
+    a2 = st.text_input("직접 입력 - A팀 2", key="a2_manual") if a2_select == "직접 입력" else a2_select
+
+    b1_select = st.selectbox("B팀 플레이어 1", options=name_options, key="b1_select")
+    b1 = st.text_input("직접 입력 - B팀 1", key="b1_manual") if b1_select == "직접 입력" else b1_select
+    b2_select = st.selectbox("B팀 플레이어 2", options=name_options, key="b2_select")
+    b2 = st.text_input("직접 입력 - B팀 2", key="b2_manual") if b2_select == "직접 입력" else b2_select
+
+    if st.button("게임 시작"):
+        st.session_state.a1 = a1
+        st.session_state.a2 = a2
+        st.session_state.b1 = b1
+        st.session_state.b2 = b2
+        st.session_state.page = "main"
+        st.rerun()
+
+# 메인 점수 계산 페이지
+elif st.session_state.page == "main":
+    st.markdown("### 🟥 A팀: {}점 | 🟦 B팀: {}점".format(
+        st.session_state.total['A'], st.session_state.total['B']))
+
+    colA, colB = st.columns([0.5, 0.5])
     with colA:
-        st.subheader("🟥 A팀")
-        a1 = st.selectbox("A팀 플레이어 1", options=st.session_state.names + [""], key="a1")
-        a2 = st.selectbox("A팀 플레이어 2", options=st.session_state.names + [""], key="a2")
+        st.subheader(f"🟥 A팀 ({st.session_state.total['A']}점)")
         a_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="a_tichu")
-        st.checkbox("성공 여부", key="a_success", value=True)
+        st.checkbox("성공 여부", key="a_success", value=False)
         st.text_input("점수", key="a_score")
-
     with colB:
-        st.subheader("🟦 B팀")
-        b1 = st.selectbox("B팀 플레이어 1", options=st.session_state.names + [""], key="b1")
-        b2 = st.selectbox("B팀 플레이어 2", options=st.session_state.names + [""], key="b2")
+        st.subheader(f"🟦 B팀 ({st.session_state.total['B']}점)")
         b_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="b_tichu")
-        st.checkbox("성공 여부", key="b_success", value=True)
+        st.checkbox("성공 여부", key="b_success", value=False)
         st.text_input("점수", key="b_score")
 
     st.radio("더블 승리 팀", ["없음", "A", "B"], index=0, key="double", horizontal=True)
@@ -129,11 +151,20 @@ if st.session_state.page == "main":
         if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
             winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
             st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
-            save_records(winner, [(a1, "A팀"), (a2, "A팀"), (b1, "B팀"), (b2, "B팀")])
+            save_records(winner, [(st.session_state.a1, "A팀"), (st.session_state.a2, "A팀"), (st.session_state.b1, "B팀"), (st.session_state.b2, "B팀")])
+
+    if st.button("되돌리기"):
+        if st.session_state.history:
+            last = st.session_state.history.pop()
+            st.session_state.total["A"] -= last["A"]
+            st.session_state.total["B"] -= last["B"]
+            st.session_state.round -= 1
+            st.rerun()
+        else:
+            st.warning("되돌릴 라운드가 없습니다.")
 
     st.markdown("---")
     st.subheader("📊 라운드 로그")
-    st.write(f"### A팀: {st.session_state.total['A']}점 | B팀: {st.session_state.total['B']}점")
     for i, r in enumerate(st.session_state.history):
         st.text(f"🔸 {i+1}R → A팀: +{r['A']}점 | B팀: +{r['B']}점")
 
@@ -141,10 +172,10 @@ if st.session_state.page == "main":
     if st.button("초기화"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
-        st.experimental_rerun()
+        st.rerun()
     if st.button("기록 보기"):
         st.session_state.page = "record"
-        st.experimental_rerun()
+        st.rerun()
 
 elif st.session_state.page == "record":
     record_page()
