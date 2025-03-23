@@ -90,7 +90,6 @@ def save_records(winner_team, names):
     df = pd.DataFrame([[n, w, l] for n, (w, l) in record.items()], columns=["이름", "승", "패"])
     df.to_csv(RECORD_FILE, index=False)
     st.success("기록이 저장되었습니다!")
-
 # 기록 보기
 def record_page():
     st.header("📖 플레이어 기록")
@@ -115,15 +114,8 @@ def record_page():
             st.success("모든 기록이 초기화되었습니다.")
             st.rerun()
 
-    if st.button("← 돌아가기"):
-        st.session_state.page = "main"
-        st.rerun()
-
-    if st.button("🏠 처음 화면으로"):
+    if st.button("🏠 처음 화면으로 돌아가기"):
         st.session_state.page = "setup"
-        st.rerun()
-
-        st.session_state.page = "main"
         st.rerun()
 
 # 이름 입력 페이지
@@ -146,6 +138,14 @@ if st.session_state.page == "setup":
         st.session_state.a2 = a2
         st.session_state.b1 = b1
         st.session_state.b2 = b2
+        st.session_state.page = "main"
+        st.rerun()
+
+    if st.button("이름 없이 바로 시작"):
+        st.session_state.a1 = "플레이어 1"
+        st.session_state.a2 = "플레이어 2"
+        st.session_state.b1 = "플레이어 3"
+        st.session_state.b2 = "플레이어 4"
         st.session_state.page = "main"
         st.rerun()
 
@@ -174,7 +174,7 @@ elif st.session_state.page == "main":
 
             save_choice = st.radio("기록을 저장하시겠습니까?", ["예", "아니오"], key="save_option")
 
-            if save_choice == "예" and st.button("기록 저장"):
+            if save_choice == "예":
                 save_records(winner, [
                     (st.session_state.a1, "A팀"),
                     (st.session_state.a2, "A팀"),
@@ -187,31 +187,3 @@ elif st.session_state.page == "main":
                 st.session_state.page = "setup"
                 st.rerun()
         else:
-            st.rerun()
-
-    if st.button("되돌리기"):
-        if st.session_state.history:
-            last = st.session_state.history.pop()
-            st.session_state.total["A"] -= last["A"]
-            st.session_state.total["B"] -= last["B"]
-            st.session_state.round -= 1
-            st.rerun()
-        else:
-            st.warning("되돌릴 라운드가 없습니다.")
-
-    st.markdown("---")
-    st.subheader("📊 라운드 로그")
-    for i, r in enumerate(st.session_state.history):
-        st.text(f"🔸 {i+1}R → A팀: +{r['A']}점 | B팀: +{r['B']}점")
-
-    st.markdown("---")
-    if st.button("초기화"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
-    if st.button("기록 보기"):
-        st.session_state.page = "record"
-        st.rerun()
-
-elif st.session_state.page == "record":
-    record_page()
