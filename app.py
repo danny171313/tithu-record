@@ -145,7 +145,7 @@ elif st.session_state.page == "main":
 
     if st.button("점수 계산"):
         calculate()
-        if st.session_state.total["A"] >= 1000 or st.session_state.total["B"] >= 1000:
+        st.rerun()  # 점수 반영 후 즉시 화면 갱신 or st.session_state.total["B"] >= 1000:
             winner = "A팀" if st.session_state.total["A"] >= 1000 else "B팀"
             st.success(f"🎉 축하합니다! {winner}이 승리했습니다!")
             save_records(winner, [(st.session_state.a1, "A팀"), (st.session_state.a2, "A팀"), (st.session_state.b1, "B팀"), (st.session_state.b2, "B팀")])
