@@ -129,17 +129,16 @@ if st.session_state.page == "setup":
 
 # 메인 점수 계산 페이지
 elif st.session_state.page == "main":
-    st.markdown("### 🟥 A팀: {}점 | 🟦 B팀: {}점".format(
-        st.session_state.total['A'], st.session_state.total['B']))
+    )
 
     colA, colB = st.columns([0.5, 0.5])
     with colA:
-        st.subheader(f"🟥 A팀 ({st.session_state.total['A']}점)")
+        st.subheader(f"🟥 A팀 {st.session_state.total['A']}점")
         a_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="a_tichu")
         st.checkbox("성공 여부", key="a_success", value=False)
         st.text_input("점수", key="a_score")
     with colB:
-        st.subheader(f"🟦 B팀 ({st.session_state.total['B']}점)")
+        st.subheader(f"🟦 B팀 {st.session_state.total['B']}점")
         b_tichu = st.radio("티츄 선언", ["없음", "티츄", "라지 티츄"], key="b_tichu")
         st.checkbox("성공 여부", key="b_success", value=False)
         st.text_input("점수", key="b_score")
